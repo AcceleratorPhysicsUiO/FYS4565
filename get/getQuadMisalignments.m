@@ -11,11 +11,11 @@ function [ sigma_dx, sigma_dy, quad_dxs, quad_dys ] = getQuadMisalignments()
 
     % extract quadrupole misalignments in x and y
     headerLinesIn = 8;
-    misalignmentData = importdata(misalignmentFile, ' ', headerLinesIn);
+    misalignmentData = readAsciiData(misalignmentFile, headerLinesIn);
     
     % read out misalignments of quads (DX, DY)
-    quad_dxs = misalignmentData.data(:, 43);
-    quad_dys = misalignmentData.data(:, 44);
+    quad_dxs = misalignmentData(:, 43);
+    quad_dys = misalignmentData(:, 44);
     
 end
 

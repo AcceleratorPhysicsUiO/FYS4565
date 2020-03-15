@@ -8,7 +8,7 @@ function [ beam ] = getInitialBeam()
 
     % extract beam 6D phase space (after last BPM)
     headerLinesIn = 54;
-    track_data = importdata(trackFile, ' ', headerLinesIn);
-    beam = track_data.data(:,3:8);
+    track_data = readAsciiData(trackFile, headerLinesIn);
+    beam = track_data(:,3:8);
     
 end
