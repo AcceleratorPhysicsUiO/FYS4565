@@ -7,10 +7,22 @@ function [ params ] = getParams()
     
     % extract quadrupole misalignments in x and y
     headerLinesIn = 4;
-    paramsData = importdata(paramsFile, ' ', headerLinesIn);
+    
+    %paramsData = importdata(paramsFile, ' ', headerLinesIn);
+    
+    fid = fopen(paramsFile, 'r');
+    for i = 1:headerLinesIn
+        fgetl(fid);
+    end
+    dataLine = fgetl(fid);
+    fclose(fid);
+    
+    %Return parameter list
+    params = str2num(dataLine);
     
     % return parameter list
-    params = paramsData.data;
+    %params = paramsData.data;
     
 end
+
 
