@@ -21,8 +21,8 @@ function [ xs, ys, ss ] = getBPMreadings()
     fclose(fileID);
     particleNumber = getParticleNumber();
     for i = 1:nBPMs
-        xs(i) = mean(data{3}((1:particleNumber) + i*particleNumber)) - bpm_dx(i); % mean x with BPM misalignment
-        ys(i) = mean(data{5}((1:particleNumber) + i*particleNumber)) - bpm_dy(i); % mean y with BPM misalignment
+        xs(i) = mean(data{3}((1:particleNumber) + i*particleNumber)) - str2double(bpm_dx(i)) % mean x with BPM misalignment
+        ys(i) = mean(data{5}((1:particleNumber) + i*particleNumber)) - str2double(bpm_dy(i)); % mean y with BPM misalignment
         ss(i) = data{9}(i*particleNumber+1); % BPM s-position
     end
     
