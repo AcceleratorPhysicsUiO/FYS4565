@@ -1,9 +1,13 @@
-function [data] = readAsciiData(fileName, headerLines)
+function [data] = readAsciiData(fileName, headerLines, delim)
     %READASCIIDATA Simple function to read an ASCII file into a table
     %   Similar to importdata.m::LocalTextRead()
     %
     %   Note that textscan(), as used in getBPMreadings,
     %   may be faster and safer; however this function mimics importdata().
+    
+    if ~exist('delim','var')
+        delim = ' ';
+    end
     
     fid = fopen(fileName, 'r');
     %Scroll past the header lines...
@@ -28,15 +32,30 @@ function [data] = readAsciiData(fileName, headerLines)
             break
         end
         if isempty(strtrim(dataLine))
-            %Blank line, SKIP
+            %Blank line or only whitespace, SKIP
             continue;
         end
         
         %For debugging
         %disp(dataLine)
         
-        % Parse!
-        dataLineNum = str2num(dataLine); %#ok<ST2NM>
+        % Parse:
+        % Skip columns with strings (and blanks), convert the rest to doubles
+        dataLineSplit = split(dataLine, delim);
+        if isempty(dataLineSplit)
+            %splitted into nothing, probably was a blank line
+            continue;
+        end
+        dataLineNum = [];
+        for j = 1:length(dataLineSplit)
+            [num,convStatus] = str2num(dataLineSplit{j}); %#ok<ST2NM>
+            if convStatus && isnumeric(num)
+                %Note: For matlab 2019a,
+                % "BPM" is a sucessfully converted number.
+                % For 2019b, it is not.
+               dataLineNum(end+1) = num; %#ok<AGROW>
+            end
+        end
         
         %Mimic importdata behaviour; if something unexpected happens,
         % we are effectively EOF so stop reading.
